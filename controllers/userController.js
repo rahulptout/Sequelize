@@ -311,6 +311,46 @@ var getSetVirtual = async(req, res) => {
         res.status(200).json({data:data});  
     }
 
+    var scopesUser = async (req,res) => {
+        // var data = {};
+    //    var data = await User.create({firstName: "aditi", lastName: "sharma", status: 1 })
+    //    if(data && data.id){
+    //       var contact = await Contact.create({permanent_address: 'pune', current_adress: 'pune', pin_code_four: '452041', userId: data.id})
+    //     }
+    User.addScope('checkStatus',{ //scope define
+       where: {
+        status: 1
+       }
+    })
+
+    User.addScope('lastNameChecker',{ //scope define
+        where: {
+         lastName: 'sharmaIndian'
+        }
+     })
+
+     
+
+    // var data = await User.scope(['checkStatus', 'lastNameChecker']).findAll({});
+       User.addScope('includeContact',{
+        include:{
+            model:Contact,
+            attributes: ['permanent_address']
+        }
+       })
+
+       User.addScope('userAttributes',{
+        attributes:['firstName']
+       })
+       
+       User.addScope('limits',{
+        limit:1
+       })
+
+       let data = await User.scope(['includeContact', 'userAttributes', 'limits']).findAll({})
+        res.status(200).json({data:data}); 
+    }
+
 module.exports = {
     addUser,
     getUsers,
@@ -329,6 +369,7 @@ module.exports = {
     paranoidUser,
     loadingUser,
     eagerUser,
-    creatorUser
+    creatorUser,
+    scopesUser
 
 }

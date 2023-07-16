@@ -39,7 +39,8 @@ User.init({
     set(value) {
       throw new Error('Do not try to set the `fullName` value!');
     }
-  }
+  },
+  status:DataTypes.INTEGER
 }, {
   // Other model options go here
   sequelize, // We need to pass the connection instance

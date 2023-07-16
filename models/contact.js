@@ -12,7 +12,11 @@ const Contact = sequelize.define('contacts', {
   pin_code_four: {
     type: DataTypes.STRING
     // allowNull defaults to true
-  }
+  },
+  userId: {
+    type: DataTypes.INTEGER
+    // allowNull defaults to true
+  } // user for one to one
 }, {
   // Other model options go here
 });

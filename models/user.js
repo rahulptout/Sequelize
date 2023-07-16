@@ -43,7 +43,9 @@ User.init({
 }, {
   // Other model options go here
   sequelize, // We need to pass the connection instance
-  modelName: 'user' // We need to choose the model name
+  modelName: 'user', // We need to choose the model name
+  paranoid: true,
+  deletedAt: 'soft_delete',
 });
  return User;
 }

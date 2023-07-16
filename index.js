@@ -26,7 +26,13 @@ app.get('/get-set-virtual', userCtrl.getSetVirtual)
 
 app.get('/validations', userCtrl.getValidations)
 app.get('/raw-queries', userCtrl.rawQueriesUser)
-
+app.get('/one-to-one', userCtrl.oneToOneUser)
+app.get('/one-to-many', userCtrl.oneToManyUser)
+app.get('/many-to-many', userCtrl.manyToManyUser)
+app.get('/paranoid', userCtrl.paranoidUser)
+app.get('/loading', userCtrl.loadingUser)
+app.get('/eager', userCtrl.eagerUser)
+app.get('/creator', userCtrl.creatorUser)
 
 // User.sync({force: true}); // check sequelize, first if table present it is drop and create new table 
 // User.sync({alter: true});

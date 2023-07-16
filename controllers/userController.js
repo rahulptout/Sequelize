@@ -1,5 +1,9 @@
 var db = require('../models')
 var User = db.user;
+var Contact = db.contact;
+// var userContacts = db.user_contants;
+var Education = db.education;
+
 const { Sequelize, Op, QueryTypes } = require('sequelize');
 
 var addUser = async (req, res) => {
@@ -172,6 +176,140 @@ var getSetVirtual = async(req, res) => {
         res.status(200).json({data:users});   
 
     }
+    
+    var oneToOneUser = async (req,res) => {
+    //   const data = await User.create({firstName: "priya", lastName: "new1"})
+    //   if(data && data.id){
+    //     await Contact.create({permanent_address: 'new jain indore', current_adress: 'plasia', pin_code_four: '452014', user_id: user.id})
+    //   }  
+
+    // var data = await User.findAll({
+    //     attributes:['firstName'],
+    //     include:[{
+    //         model: Contact,
+    //         as: 'contactDetails',
+    //         attributes:['permanent_address']
+    //     }],
+    // })
+
+    var data = await Contact.findAll({
+        attributes:['permanent_address'],
+        include:[{
+            model: User,
+            as: 'userDetails',
+            attributes:['firstName']
+        }],
+    })
+      res.status(200).json({data:data});   
+
+    }
+ 
+    var oneToManyUser =  async (req,res) => {
+        // const data =  await Contact.create({permanent_address: 'new jain indore1', current_adress: 'plasia1', pin_code_four: '452015', user_id: 1})
+        
+        var data = await User.findAll({
+        attributes:['firstName'],
+        include:[{
+            model: Contact,
+            as: 'contactDetails',
+            attributes:['permanent_address']
+        }],
+    })
+
+
+        res.status(200).json({data:data}); 
+    }
+
+    var manyToManyUser = async (req,res) => {
+        // var user = await User.create({firstName: "aditi", lastName: "rathore1"})
+        // if(user && user.id){
+        //   var contact = await Contact.create({permanent_address: 'sanawad', current_adress: 'indore', pin_code_four: '452043'})
+        // }
+        // if(user.id && contact.id){
+        //     await userContacts.create({userId: user.id, contactId: contact.id})
+        // }
+        // var data = {}
+        var data = await User.findAll({
+            attributes:['firstName'],
+            include:[{
+                model: Contact,
+                attributes:['permanent_address']
+            }],
+            where: {
+              id: 9,
+            },
+        })
+          res.status(200).json({data:data});   
+        
+    }
+
+    var paranoidUser =  async (req,res) => {
+        // var data = await User.create({firstName: "shreya", lastName: "sharma"})
+        // var data =   await User.destroy({
+        //     where: {
+        //       id: 1
+        //     }
+        //   });
+        var data = await User.findAll({paranoid: false
+
+        })
+        res.status(200).json({data:data});      
+    }
+
+    var loadingUser =   async (req,res) => {
+        // var user = await User.create({firstName: "shreya", lastName: "sharma"})
+        // if(user && user.id){
+        //   var contact = await Contact.create({permanent_address: 'bhopal', current_adress: 'indore', pin_code_four: '452043', userId: user.id})
+        // }
+        var data = await User.findOne({
+            where: {
+                id:1
+            }
+        })
+        var contactData = await data.getContacts();
+        res.status(200).json({data:contactData});  
+    }
+
+    var eagerUser = async (req,res) => {
+        var data = await User.findAll({
+            include:[{all:true,nested:true}] //work for default relation data show
+           
+            // include:[{
+            //     model: Contact,
+            //     required: true, //  inner joint if true , false 
+            //     right: true // right outer joint
+            // },{
+            //     model: Education
+            // }]
+        })
+        res.status(200).json({data:data});  
+    }
+
+    var creatorUser = async (req,res) => {
+        try {
+            await Contact.create({
+                permanent_address: "indore",
+                current_adress: "sanawad",
+                user: {
+                    firstName: "Ram",
+                    lastName: "Pal1"
+                } 
+                
+            },{
+                include:[db.contactUser]
+            })
+            var data = await User.findAll({
+                include:{
+                    model:Contact
+                }
+            }) 
+            
+        } catch (error) {
+          console.error('Error inserting data into contacts table:', error);
+        }
+        
+        res.status(200).json({data:data});  
+    }
 
 module.exports = {
     addUser,
@@ -184,6 +322,13 @@ module.exports = {
     findersUser,
     getSetVirtual,
     getValidations,
-    rawQueriesUser
+    rawQueriesUser,
+    oneToOneUser,
+    oneToManyUser,
+    manyToManyUser,
+    paranoidUser,
+    loadingUser,
+    eagerUser,
+    creatorUser
 
 }

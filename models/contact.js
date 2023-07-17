@@ -14,8 +14,8 @@ const Contact = sequelize.define('contacts', {
     // allowNull defaults to true
   },
   userId: {
-    type: DataTypes.INTEGER
-    // allowNull defaults to true
+    type: DataTypes.INTEGER,
+    allowNull: false 
   } // user for one to one
 }, {
   // Other model options go here

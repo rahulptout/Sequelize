@@ -34,6 +34,7 @@ app.get('/loading', userCtrl.loadingUser)
 app.get('/eager', userCtrl.eagerUser)
 app.get('/creator', userCtrl.creatorUser)
 app.get('/scopes', userCtrl.scopesUser)
+app.get('/transactions', userCtrl.transactionsUser)
 
 // User.sync({force: true}); // check sequelize, first if table present it is drop and create new table 
 // User.sync({alter: true});

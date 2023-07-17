@@ -351,6 +351,54 @@ var getSetVirtual = async(req, res) => {
         res.status(200).json({data:data}); 
     }
 
+    // var transactionsUser = async (req,res) => {
+    //     const t = await db.sequelize.transaction();
+    //     var data = await User.create({firstName: "shyam", lastName: "sharma", status: 1 })
+    //     if(data && data.id){
+    //         try {
+    //           var contact = await Contact.create({permanent_address: 'pune', current_adress: 'pune', pin_code_four: '452041', userId: null})
+    //           await t.commit();
+    //           data['transactions_rollback'] = 'commit'
+    //           console.log('rollback')
+    //         } catch (error) {
+    //             await t.rollback(); 
+    //             data['transactions_rollback'] = 'rollback'
+    //             console.log('rollback')
+    //             await User.destroy({
+    //                 where:{
+    //                     id: data.id
+    //                 }
+    //             })
+    //         }
+    //     }
+    //     res.status(200).json({data:data}); 
+    // }
+
+    var transactionsUser = async (req,res) => {
+        var data = await User.create({firstName: "hello", lastName: "sharma", status: 1 })
+
+        try {
+
+            const result = await db.sequelize.transaction(async (t) => {
+            var contact = await Contact.create({permanent_address: 'pune', current_adress: 'pune', pin_code_four: '452041', userId: null}, { transaction: t });
+          
+              return contact;
+          
+            });
+          
+            console.log('result', result)
+          } catch (error) {
+          
+            console.log('error:',error.message)
+            await User.destroy({
+                                where:{
+                                    id: data.id
+                                }
+                            })
+          }
+          res.status(200).json({data:data}); 
+
+    }
 module.exports = {
     addUser,
     getUsers,
@@ -370,6 +418,7 @@ module.exports = {
     loadingUser,
     eagerUser,
     creatorUser,
-    scopesUser
+    scopesUser,
+    transactionsUser
 
 }

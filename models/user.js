@@ -42,11 +42,31 @@ User.init({
   },
   status:DataTypes.INTEGER
 }, {
+  // hooks: {
+  //   beforeValidate: (user, options) => {
+  //     user.firstName = 'Mr'+user.firstName;
+  //   },
+  //   afterValidate: (user, options) => {
+  //     user.status = 1;
+  //   }
+  // },
   // Other model options go here
   sequelize, // We need to pass the connection instance
   modelName: 'user', // We need to choose the model name
   paranoid: true,
   deletedAt: 'soft_delete',
 });
- return User;
+
+//  User.addHook('beforeValidate', (user, options) => {
+//   user.lastName = 'happy';
+// });
+
+// User.addHook('afterValidate', 'someCustomName', (user, options) => {
+//  user.status = 1;
+// });
+User.beforeCreate(async (user, options) => {
+  user.lastName = "hero";
+})
+
+return User;
 }

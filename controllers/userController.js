@@ -399,6 +399,11 @@ var getSetVirtual = async(req, res) => {
           res.status(200).json({data:data}); 
 
     }
+
+    var hooksUser = async(req,res) => {
+         var data = await User.create({firstName: "good", lastName: "shra", status: 0 })
+        res.status(200).json({data:data}); 
+    }
 module.exports = {
     addUser,
     getUsers,
@@ -419,6 +424,7 @@ module.exports = {
     eagerUser,
     creatorUser,
     scopesUser,
-    transactionsUser
+    transactionsUser,
+    hooksUser
 
 }

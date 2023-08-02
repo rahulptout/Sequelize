@@ -1,4 +1,5 @@
 var db = require('../models')
+// var nodemailer = require('nodemailer');
 var User = db.user;
 var Contact = db.contact;
 // var userContacts = db.user_contants;
@@ -404,6 +405,44 @@ var getSetVirtual = async(req, res) => {
          var data = await User.create({firstName: "good", lastName: "shra", status: 0 })
         res.status(200).json({data:data}); 
     }
+
+
+var nodemailer = require('nodemailer');
+
+// Create a transporter
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'rahulp.tout@gmail.com',
+    pass: 'ocyrytafbmyyszbn',
+  },
+});
+
+// Function to send an email
+const sendEmail = () => {
+  return new Promise((resolve, reject) => {
+    // Compose the email
+    const mailOptions = {
+      from: 'rahulp.tout@gmail.com',
+      to: 'banti.tout@gmail.com',
+      subject: 'Hello from Node.js',
+      text: 'This is a test email sent from Node.js using nodemailer.',
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        reject(error);
+      } else {
+        console.log('Email sent:', info.messageId);
+        resolve();
+      }
+    });
+  });
+};
+
+
 module.exports = {
     addUser,
     getUsers,
@@ -425,6 +464,7 @@ module.exports = {
     creatorUser,
     scopesUser,
     transactionsUser,
-    hooksUser
+    hooksUser,
+    sendEmail
 
 }

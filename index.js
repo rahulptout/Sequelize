@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 3001;
 var bodyParser = require('body-parser')
+var nodemailer = require('nodemailer');
 require('./models')
 
 const userCtrl = require('./controllers/userController');
@@ -36,6 +37,19 @@ app.get('/creator', userCtrl.creatorUser)
 app.get('/scopes', userCtrl.scopesUser)
 app.get('/transactions', userCtrl.transactionsUser)
 app.get('/hooks', userCtrl.hooksUser)
+
+// Route handler for sending email
+app.get('/email', (req, res) => {
+  userCtrl.sendEmail()
+    .then(() => {
+      res.send('Email sent successfully');
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+      res.status(500).send('Failed to send email');
+    });
+});
+
 
 // User.sync({force: true}); // check sequelize, first if table present it is drop and create new table 
 // User.sync({alter: true});
